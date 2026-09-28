@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Análisis de Negocio - Electromuebles</title>
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+  </script>
+  <style>
+    :root{
+      --azul:#1d4e89;
+      --azul2:#2a6f97;
+      --verde:#2e8b57;
+      --rojo:#b22234;
+      --gris:#dfe7ef;
+      --blanco:#ffffff;
+      --negro:#1e1e1e;
+      --sombra: 0 3px 8px rgba(0,0,0,0.12);
+    }
+
+    * { box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:#f4f7fb;
+      color:var(--negro);
+      line-height:1.5;
+    }
+
+    .container{
+      max-width:1300px;
+      margin:0 auto;
+      padding:30px 20px 60px;
+    }
+
+    .cover{
+      background: linear-gradient(135deg, var(--azul), var(--azul2));
+      color: white;
+      border-radius: 18px;
+      padding: 30px 40px;
+      box-shadow: var(--sombra);
+      margin-bottom: 25px;
+    }
+
+    .cover h1{ margin:0; font-size:2.2rem; }
+    .cover p{ margin:8px 0 0; font-size:1.05rem; opacity:0.95; }
+
+    .section{
+      background:#fff;
+      border-radius:16px;
+      padding:24px 22px;
+      margin-bottom:22px;
+      box-shadow: var(--sombra);
+    }
+
+    .section h2{
+      margin:0 0 14px;
+      color:var(--azul);
+      border-bottom:2px solid var(--gris);
+      padding-bottom:8px;
+      font-size:1.5rem;
+    }
+
+    .subtitulo{
+      font-weight:700;
+      color:var(--azul2);
+      margin:18px 0 8px;
+      font-size:1.1rem;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:8px;
+      font-size:0.92rem;
+    }
+
+    th, td{
+      border:1px solid #ccd8e5;
+      padding:8px 10px;
+      vertical-align:top;
+      text-align:left;
+    }
+
+    th{
+      background:#edf3fa;
+      color:var(--azul);
+      font-weight:700;
+    }
+
+    .badge{
+      display:inline-block;
+      padding:4px 9px;
+      border-radius:999px;
+      font-size:0.75rem;
+      font-weight:700;
+      margin-right:6px;
+    }
+
+    .fuerte{ background:#e8f7ee; color:#1d6b46; }
+    .debil{ background:#fbeaea; color:#9d2f2f; }
+    .tipo{ background:#eef3ff; color:#2c4f93; }
+
+    .mermaid{
+      background:#fafcff;
+      border:1px solid #dfeaf6;
+      border-radius:12px;
+      padding:10px;
+      overflow:auto;
+    }
+
+    ul{
+      margin:10px 0 0 20px;
+      padding:0;
+    }
+
+    li{ margin:6px 0; }
+
+    .dos-col{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:20px;
+    }
+
+    .mini{
+      font-size:0.84rem;
+    }
+
+    @media (max-width: 900px){
+      .dos-col{ grid-template-columns: 1fr; }
+    }
+
+    @media print{
+      body{ background:#fff; }
+      .section{ box-shadow:none; border:1px solid #dfeaf6; }
+      .cover{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="cover">
+      <h1>Empresa: Electromuebles</h1>
+      <p>Modelo de dominio, análisis de entidades, relaciones y tablas de base de datos</p>
+    </div>
+
+    <div class="section">
+      <h2>1. Objetivo del negocio</h2>
+      <p>
+        El negocio de electromuebles gestiona ventas, compras, inventario, caja, pagos, cobranzas,
+        proveedores, clientes, sucursales, personal y banco. La base de datos deberá soportar todas
+        las operaciones de administración, logística, facturación, tesorería y nómina.
+      </p>
+      <p>
+        Se trabaja con la cardinalidad: <strong>1:1</strong>, <strong>1:N</strong> y <strong>N:M</strong>.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>2. Diferencia entre DEA, DERE y DER</h2>
+
+      <div class="dos-col">
+        <div>
+          <div class="subtitulo">DEA</div>
+          <p>Es el Diagrama de Entidad-Atributo. Incluye:</p>
+          <ul>
+            <li>todas las entidades</li>
+            <li>sus atributos</li>
+            <li>claves primarias</li>
+            <li>claves candidatas</li>
+            <li>claves foráneas</li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="subtitulo">DERE</div>
+          <p>Es el Diagrama de Entidad-Relación con fuerza de entidad. Incluye:</p>
+          <ul>
+            <li>entidad fuerte</li>
+            <li>entidad débil</li>
+            <li>relación</li>
+            <li>cardinalidad</li>
+            <li>solo la clave principal y la relación</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="subtitulo">DER</div>
+      <p>
+        Es el Diagrama Entidad-Relación general. Incluye:
+      </p>
+      <ul>
+        <li>entidades</li>
+        <li>relaciones</li>
+        <li>cardinalidad</li>
+        <li>clave primaria de cada entidad</li>
+      </ul>
+
+      <div class="subtitulo">Regla de entidad fuerte y débil</div>
+      <p>
+        En relación directa, la entidad fuerte se representa con doble línea y la débil con línea simple.
+        Ejemplo que indicó el profesor:
+      </p>
+
+      <div class="mermaid">
+        erDiagram
+          CLIENTE ||--o{ FACTURA : genera
+      </div>
+
+      <p class="mini">
+        <span class="badge fuerte">Fuerte</span> CLIENTE<br>
+        <span class="badge debil">Débil</span> FACTURA
+      </p>
+      <p>
+        <strong>Ejemplo de criterio:</strong> Cliente es fuerte respecto a Factura.
+        Factura es débil respecto a Cliente porque depende de él para existir.
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>3. Entidades por categorías y clasificación fuerte/débil</h2>
+
+      <div class="subtitulo">Categoría 1: Administración, Ubicación y Seguridad</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Entidad</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Sucursal</td><td><span class="badge fuerte">Fuerte</span></td><td>Unidades físicas del negocio.</td></tr>
+          <tr><td>Ciudad</td><td><span class="badge fuerte">Fuerte</span></td><td>Ubicación geográfica.</td></tr>
+          <tr><td>Usuario</td><td><span class="badge fuerte">Fuerte</span></td><td>Usuarios del sistema.</td></tr>
+          <tr><td>Provincia</td><td><span class="badge fuerte">Fuerte</span></td><td>Entidad geográfica base.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">Categoría 2: Recursos Humanos y Personal</div>
+      <table>
+        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>Cargo</td><td><span class="badge fuerte">Fuerte</span></td><td>Rol dentro de la empresa.</td></tr>
+          <tr><td>Empleado</td><td><span class="badge fuerte">Fuerte</span></td><td>Persona que labora en la empresa.</td></tr>
+          <tr><td>Vendedor</td><td><span class="badge fuerte">Fuerte</span></td><td>Empleado vinculado a ventas.</td></tr>
+          <tr><td>Nómina</td><td><span class="badge debil">Débil</span></td><td>Dependiente del empleado y periodo.</td></tr>
+          <tr><td>Descuento de nómina</td><td><span class="badge debil">Débil</span></td><td>Descuentos asociados a una nómina.</td></tr>
+          <tr><td>Impuesto de nómina</td><td><span class="badge debil">Débil</span></td><td>Impuestos aplicados a la nómina.</td></tr>
+          <tr><td>Departamento nómina</td><td><span class="badge fuerte">Fuerte</span></td><td>Áreas o departamentos de gestión de personal.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">Categoría 3: Catálogo e Inventario</div>
+      <table>
+        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>Categoría</td><td><span class="badge fuerte">Fuerte</span></td><td>Clasificación del producto.</td></tr>
+          <tr><td>Marca</td><td><span class="badge fuerte">Fuerte</span></td><td>Nombre de la marca del producto.</td></tr>
+          <tr><td>Producto</td><td><span class="badge fuerte">Fuerte</span></td><td>Inventario del negocio.</td></tr>
+          <tr><td>Unidad de producto</td><td><span class="badge fuerte">Fuerte</span></td><td>Unidad de medida del producto.</td></tr>
+          <tr><td>Almacén</td><td><span class="badge fuerte">Fuerte</span></td><td>Espacio de almacenamiento.</td></tr>
+          <tr><td>Transferencia de almacenes</td><td><span class="badge debil">Débil</span></td><td>Movimiento entre almacenes.</td></tr>
+          <tr><td>Grupo de producto</td><td><span class="badge fuerte">Fuerte</span></td><td>Agrupación de productos por familia.</td></tr>
+          <tr><td>Departamento de producto</td><td><span class="badge fuerte">Fuerte</span></td><td>Clasificación funcional del producto.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">Categoría 4: Ventas, Facturación y Despacho</div>
+      <table>
+        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>Cliente</td><td><span class="badge fuerte">Fuerte</span></td><td>Cliente del negocio.</td></tr>
+          <tr><td>Cotización</td><td><span class="badge debil">Débil</span></td><td>Oferta inicial para un cliente.</td></tr>
+          <tr><td>Factura</td><td><span class="badge debil">Débil</span></td><td>Documento de venta, depende del cliente.</td></tr>
+          <tr><td>Devolución de factura</td><td><span class="badge debil">Débil</span></td><td>Devolución asociada a una factura.</td></tr>
+          <tr><td>Entrega a domicilio</td><td><span class="badge debil">Débil</span></td><td>Servicio logístico vinculado a la factura.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">Categoría 5: Compras y Proveedores</div>
+      <table>
+        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>Proveedor</td><td><span class="badge fuerte">Fuerte</span></td><td>Persona o empresa que abastece productos.</td></tr>
+          <tr><td>Orden de compra</td><td><span class="badge debil">Débil</span></td><td>Pedido formal al proveedor.</td></tr>
+          <tr><td>Compra</td><td><span class="badge debil">Débil</span></td><td>Ingreso de productos al negocio.</td></tr>
+          <tr><td>Devolución de compra</td><td><span class="badge debil">Débil</span></td><td>Devolución de productos comprados.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">Categoría 6: Cuentas por Cobrar y Pagar</div>
+      <table>
+        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>Cuentas por cobrar</td><td><span class="badge debil">Débil</span></td><td>Dinero pendiente por cobrar.</td></tr>
+          <tr><td>Nota de crédito cuentas por cobrar</td><td><span class="badge debil">Débil</span></td><td>Ajuste positivo al cliente.</td></tr>
+          <tr><td>Nota de débito cuentas por cobrar</td><td><span class="badge debil">Débil</span></td><td>Ajuste negativo al cliente.</td></tr>
+          <tr><td>Cuentas por pagar</td><td><span class="badge debil">Débil</span></td><td>Dinero pendiente por pagar.</td></tr>
+          <tr><td>Nota de crédito cuentas por pagar</td><td><span class="badge debil">Débil</span></td><td>Ajuste positivo al proveedor.</td></tr>
+          <tr><td>Nota de débito cuentas por pagar</td><td><span class="badge debil">Débil</span></td><td>Ajuste negativo al proveedor.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">Categoría 7: Caja y Efectivo</div>
+      <table>
+        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>Caja</td><td><span class="badge fuerte">Fuerte</span></td><td>Arqueo de efectivo.</td></tr>
+          <tr><td>Apertura de caja</td><td><span class="badge debil">Débil</span></td><td>Inicio del turno de caja.</td></tr>
+          <tr><td>Cierre de caja</td><td><span class="badge debil">Débil</span></td><td>Cierre final de caja.</td></tr>
+          <tr><td>Recibo de ingreso</td><td><span class="badge debil">Débil</span></td><td>Registro de movimiento de ingreso.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">Categoría 8: Gestión Bancaria y Tesorería</div>
+      <table>
+        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td>Banco</td><td><span class="badge fuerte">Fuerte</span></td><td>Entidad bancaria.</td></tr>
+          <tr><td>Cuenta bancaria</td><td><span class="badge fuerte">Fuerte</span></td><td>Cuenta operativa del negocio.</td></tr>
+          <tr><td>Depósito</td><td><span class="badge debil">Débil</span></td><td>Ingreso bancario asociado a una cuenta.</td></tr>
+          <tr><td>Cheque</td><td><span class="badge debil">Débil</span></td><td>Documento bancario asociado a cuenta.</td></tr>
+          <tr><td>Transferencia bancaria</td><td><span class="badge debil">Débil</span></td><td>Transferencia entre cuentas.</td></tr>
+          <tr><td>Nota de débito bancaria</td><td><span class="badge debil">Débil</span></td><td>Disminución del saldo bancario.</td></tr>
+          <tr><td>Nota de crédito bancaria</td><td><span class="badge debil">Débil</span></td><td>Aumento del saldo bancario.</td></tr>
+          <tr><td>Conciliación bancaria</td><td><span class="badge debil">Débil</span></td><td>Comparación de saldos contables y bancarios.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>4. Relaciones principales del negocio</h2>
+
+      <ul>
+        <li><strong>Provincia</strong> tiene muchas <strong>Ciudades</strong> (1:N).</li>
+        <li><strong>Ciudad</strong> tiene muchas <strong>Sucursales</strong> (1:N).</li>
+        <li><strong>Sucursal</strong> tiene muchos <strong>Empleados</strong> (1:N).</li>
+        <li><strong>Cargo</strong> define muchos <strong>Empleados</strong> (1:N).</li>
+        <li><strong>Empleado</strong> genera muchas <strong>Nóminas</strong> (1:N).</li>
+        <li><strong>Vendedor</strong> atiende muchas <strong>Cotizaciones</strong> (1:N).</li>
+        <li><strong>Cliente</strong> genera muchas <strong>Cotizaciones</strong> (1:N).</li>
+        <li><strong>Cliente</strong> genera muchas <strong>Facturas</strong> (1:N).</li>
+        <li><strong>Factura</strong> tiene muchas <strong>Devoluciones</strong> (1:N).</li>
+        <li><strong>Factura</strong> puede tener una <strong>Entrega a domicilio</strong> (1:1).</li>
+        <li><strong>Proveedor</strong> hace muchas <strong>Compras</strong> (1:N).</li>
+        <li><strong>Compra</strong> genera <strong>Cuentas por pagar</strong> (1:1).</li>
+        <li><strong>Cliente</strong> genera <strong>Cuentas por cobrar</strong> (1:N).</li>
+        <li><strong>Caja</strong> se abre y cierra en la <strong>Apertura/Cierre de caja</strong> (1:N).</li>
+        <li><strong>Banco</strong> tiene muchas <strong>Cuentas bancarias</strong> (1:N).</li>
+        <li><strong>Cuenta bancaria</strong> tiene muchos movimientos de <strong>Depósito</strong>, <strong>Cheque</strong> y <strong>Transferencia</strong> (1:N).</li>
+        <li><strong>Producto</strong> puede estar en muchos <strong>Almacenes</strong> mediante transferencias (N:M, a través de Transferencia de almacenes).</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>5. DER – Diagrama Entidad-Relación principal</h2>
+
+      <div class="mermaid">
+        erDiagram
+          PROVINCIA ||--o{ CIUDAD : contiene
+          CIUDAD ||--o{ SUCURSAL : tiene
+          SUCURSAL ||--o{ EMPLEADO : gestiona
+          CARGO ||--o{ EMPLEADO : define
+          EMPLEADO ||--o{ NOMINA : recibe
+          EMPLEADO ||--o{ VENDEDOR : puede_ser
+          CLIENTE ||--o{ COTIZACION : solicita
+          VENDEDOR ||--o{ COTIZACION : atiende
+          CLIENTE ||--o{ FACTURA : genera
+          FACTURA ||--o{ DEVOLUCION_FACTURA : tiene
+          FACTURA ||--|| ENTREGA_DOMICILIO : tiene
+          SUCURSAL ||--o{ FACTURA : emite
+          PROVEEDOR ||--o{ ORDEN_COMPRA : entrega
+          ORDEN_COMPRA ||--|| COMPRA : convierte
+          COMPRA ||--o{ DEVOLUCION_COMPRA : registra
+          CLIENTE ||--o{ CUENTAS_POR_COBRAR : tiene
+          PROVEEDOR ||--o{ CUENTAS_POR_PAGAR : tiene
+          CAJA ||--o{ APERTURA_CAJA : presenta
+          APERTURA_CAJA ||--|| CIERRE_CAJA : termina
+          APERTURA_CAJA ||--o{ RECIBO_INGRESO : registra
+          BANCO ||--o{ CUENTA_BANCARIA : tiene
+          CUENTA_BANCARIA ||--o{ DEPOSITO : recibe
+          CUENTA_BANCARIA ||--o{ CHEQUE : emite
+          CUENTA_BANCARIA ||--o{ TRANSFERENCIA_BANCARIA : realiza
+          CUENTA_BANCARIA ||--o{ NOTA_DEBITO_BANCARIA : soporta
+          CUENTA_BANCARIA ||--o{ NOTA_CREDITO_BANCARIA : soporta
+          PRODUCTO }o--|| MARCA : pertenece_a
+          PRODUCTO }o--|| CATEGORIA : clasifica
+          PRODUCTO }o--|| UNIDAD_PRODUCTO : mide
+          ALMACEN ||--o{ TRANSFERENCIA_ALMACENES : realiza
+          PRODUCTO ||--o{ TRANSFERENCIA_ALMACENES : participa
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>6. DERE – Diagrama de Entidad-Relación de Entidades Débiles/Fuertes</h2>
+
+      <p>
+        En este tipo de diagrama se gráfica la relación entre entidad fuerte y entidad débil:
+      </p>
+
+      <div class="mermaid">
+        erDiagram
+          CLIENTE ||--o{ FACTURA : genera
+          FACTURA ||--o{ DEVOLUCION_FACTURA : tiene
+          PROVEEDOR ||--o{ ORDEN_COMPRA : realiza
+          ORDEN_COMPRA ||--o{ COMPRA : convierte
+          EMPLEADO ||--o{ NOMINA : genera
+          CAJA ||--o{ APERTURA_CAJA : abre
+          CUENTA_BANCARIA ||--o{ DEPOSITO : recibe
+          BANCO ||--o{ CUENTA_BANCARIA : tiene
+      </div>
+
+      <p class="mini">
+        Convención del profesor:<br>
+        Entidad fuerte = línea doble o doble contorno<br>
+        Entidad débil = línea simple
+      </p>
+    </div>
+
+    <div class="section">
+      <h2>7. Tablas de base de datos con PK, FK, tipos y ejemplo</h2>
+
+      <div class="subtitulo">1. Sucursal</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Atributo</th>
+            <th>Tipo</th>
+            <th>PK/FK</th>
+            <th>Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>id_sucursal</td><td>INT</td><td>PK</td><td>1</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>ElectroMuebles Norte</td></tr>
+          <tr><td>direccion</td><td>VARCHAR(200)</td><td>-</td><td>Av. 9 de Octubre 345</td></tr>
+          <tr><td>telefono</td><td>VARCHAR(20)</td><td>-</td><td>0991234567</td></tr>
+          <tr><td>id_ciudad</td><td>INT</td><td>FK</td><td>10</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">2. Ciudad</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_ciudad</td><td>INT</td><td>PK</td><td>10</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Quito</td></tr>
+          <tr><td>id_provincia</td><td>INT</td><td>FK</td><td>3</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">3. Provincia</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_provincia</td><td>INT</td><td>PK</td><td>3</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Pichincha</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">4. Usuario</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_usuario</td><td>INT</td><td>PK</td><td>1</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>María</td></tr>
+          <tr><td>email</td><td>VARCHAR(150)</td><td>-</td><td>maria@electromuebles.com</td></tr>
+          <tr><td>password_hash</td><td>VARCHAR(255)</td><td>-</td><td>$2y$10$abc123</td></tr>
+          <tr><td>rol</td><td>VARCHAR(50)</td><td>-</td><td>Administrador</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">5. Cargo</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_cargo</td><td>INT</td><td>PK</td><td>1</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Vendedor</td></tr>
+          <tr><td>descripcion</td><td>VARCHAR(200)</td><td>-</td><td>Atiende ventas y clientes.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">6. Empleado</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_empleado</td><td>INT</td><td>PK</td><td>1001</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>José</td></tr>
+          <tr><td>apellido</td><td>VARCHAR(100)</td><td>-</td><td>Pérez</td></tr>
+          <tr><td>cedula</td><td>VARCHAR(15)</td><td>-</td><td>1712345678</td></tr>
+          <tr><td>salario_base</td><td>DECIMAL(10,2)</td><td>-</td><td>850.00</td></tr>
+          <tr><td>id_cargo</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>2</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">7. Vendedor</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_vendedor</td><td>INT</td><td>PK</td><td>201</td></tr>
+          <tr><td>id_empleado</td><td>INT</td><td>FK</td><td>1001</td></tr>
+          <tr><td>comision</td><td>DECIMAL(5,2)</td><td>-</td><td>5.50</td></tr>
+          <tr><td>meta_ventas</td><td>DECIMAL(10,2)</td><td>-</td><td>5000.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">8. Nómina</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_nomina</td><td>INT</td><td>PK</td><td>5001</td></tr>
+          <tr><td>id_empleado</td><td>INT</td><td>FK</td><td>1001</td></tr>
+          <tr><td>periodo</td><td>VARCHAR(20)</td><td>-</td><td>2026-09</td></tr>
+          <tr><td>sueldo_neto</td><td>DECIMAL(10,2)</td><td>-</td><td>780.00</td></tr>
+          <tr><td>fecha_pago</td><td>DATE</td><td>-</td><td>2026-09-30</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">9. Descuento de nómina</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_descuento_nomina</td><td>INT</td><td>PK</td><td>7001</td></tr>
+          <tr><td>id_nomina</td><td>INT</td><td>FK</td><td>5001</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(100)</td><td>-</td><td>Préstamo</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>60.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">10. Impuesto de nómina</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_impuesto_nomina</td><td>INT</td><td>PK</td><td>8001</td></tr>
+          <tr><td>id_nomina</td><td>INT</td><td>FK</td><td>5001</td></tr>
+          <tr><td>tipo_impuesto</td><td>VARCHAR(100)</td><td>-</td><td>IEES</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>45.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">11. Departamento nómina</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_departamento_nomina</td><td>INT</td><td>PK</td><td>11</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>RRHH</td></tr>
+          <tr><td>descripcion</td><td>VARCHAR(200)</td><td>-</td><td>Gestión de personal</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">12. Categoría</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_categoria</td><td>INT</td><td>PK</td><td>1</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Electrodomésticos</td></tr>
+          <tr><td>descripcion</td><td>VARCHAR(200)</td><td>-</td><td>Productos del hogar</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">13. Marca</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_marca</td><td>INT</td><td>PK</td><td>5</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Samsung</td></tr>
+          <tr><td>origen</td><td>VARCHAR(100)</td><td>-</td><td>Corea</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">14. Producto</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_producto</td><td>INT</td><td>PK</td><td>2001</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(150)</td><td>-</td><td>Refrigeradora 12 pies</td></tr>
+          <tr><td>descripcion</td><td>TEXT</td><td>-</td><td>Refrigerador de 2 puertas</td></tr>
+          <tr><td>precio_unitario</td><td>DECIMAL(10,2)</td><td>-</td><td>899.00</td></tr>
+          <tr><td>stock_minimo</td><td>INT</td><td>-</td><td>10</td></tr>
+          <tr><td>id_marca</td><td>INT</td><td>FK</td><td>5</td></tr>
+          <tr><td>id_categoria</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>id_unidad_producto</td><td>INT</td><td>FK</td><td>3</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">15. Unidad de producto</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_unidad_producto</td><td>INT</td><td>PK</td><td>3</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(50)</td><td>-</td><td>Unidad</td></tr>
+          <tr><td>abreviatura</td><td>VARCHAR(10)</td><td>-</td><td>U</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">16. Almacén</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_almacen</td><td>INT</td><td>PK</td><td>1</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Almacén Central</td></tr>
+          <tr><td>direccion</td><td>VARCHAR(200)</td><td>-</td><td>Av. Amazonas 100</td></tr>
+          <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>1</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">17. Transferencia de almacenes</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_transferencia</td><td>INT</td><td>PK</td><td>50</td></tr>
+          <tr><td>id_almacen_origen</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>id_almacen_destino</td><td>INT</td><td>FK</td><td>2</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-15</td></tr>
+          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>En tránsito</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">18. Grupo de producto</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_grupo_producto</td><td>INT</td><td>PK</td><td>7</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Hogar</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">19. Departamento de producto</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_departamento_producto</td><td>INT</td><td>PK</td><td>4</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Lineas Blancas</td></tr>
+          <tr><td>descripcion</td><td>VARCHAR(200)</td><td>-</td><td>Productos de línea blanca.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">20. Cliente</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_cliente</td><td>INT</td><td>PK</td><td>301</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Ana López</td></tr>
+          <tr><td>cedula_ruc</td><td>VARCHAR(20)</td><td>-</td><td>1712345678</td></tr>
+          <tr><td>telefono</td><td>VARCHAR(20)</td><td>-</td><td>0998765432</td></tr>
+          <tr><td>email</td><td>VARCHAR(150)</td><td>-</td><td>ana@gmail.com</td></tr>
+          <tr><td>id_ciudad</td><td>INT</td><td>FK</td><td>10</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">21. Cotización</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_cotizacion</td><td>INT</td><td>PK</td><td>401</td></tr>
+          <tr><td>id_cliente</td><td>INT</td><td>FK</td><td>301</td></tr>
+          <tr><td>id_vendedor</td><td>INT</td><td>FK</td><td>201</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-22</td></tr>
+          <tr><td>subtotal</td><td>DECIMAL(10,2)</td><td>-</td><td>3500.00</td></tr>
+          <tr><td>iva</td><td>DECIMAL(10,2)</td><td>-</td><td>595.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">22. Factura</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_factura</td><td>INT</td><td>PK</td><td>9001</td></tr>
+          <tr><td>id_cliente</td><td>INT</td><td>FK</td><td>301</td></tr>
+          <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>2</td></tr>
+          <tr><td>id_usuario</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-23</td></tr>
+          <tr><td>total</td><td>DECIMAL(10,2)</td><td>-</td><td>4095.00</td></tr>
+          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Pagada</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">23. Devolución de factura</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_devolucion_factura</td><td>INT</td><td>PK</td><td>500</td></tr>
+          <tr><td>id_factura</td><td>INT</td><td>FK</td><td>9001</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-26</td></tr>
+          <tr><td>motivo</td><td>VARCHAR(150)</td><td>-</td><td>Producto defectuoso</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>120.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">24. Entrega a domicilio</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_entrega_domicilio</td><td>INT</td><td>PK</td><td>600</td></tr>
+          <tr><td>id_factura</td><td>INT</td><td>FK</td><td>9001</td></tr>
+          <tr><td>direccion</td><td>VARCHAR(200)</td><td>-</td><td>La Floresta 120</td></tr>
+          <tr><td>fecha_envio</td><td>DATE</td><td>-</td><td>2026-09-24</td></tr>
+          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Entregado</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">25. Proveedor</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_proveedor</td><td>INT</td><td>PK</td><td>401</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(150)</td><td>-</td><td>TechHome S.A.</td></tr>
+          <tr><td>ruc</td><td>VARCHAR(20)</td><td>-</td><td>1798765432001</td></tr>
+          <tr><td>telefono</td><td>VARCHAR(20)</td><td>-</td><td>0999999999</td></tr>
+          <tr><td>email</td><td>VARCHAR(150)</td><td>-</td><td>ventas@techhome.com</td></tr>
+          <tr><td>id_ciudad</td><td>INT</td><td>FK</td><td>15</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">26. Orden de compra</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_orden_compra</td><td>INT</td><td>PK</td><td>7001</td></tr>
+          <tr><td>id_proveedor</td><td>INT</td><td>FK</td><td>401</td></tr>
+          <tr><td>id_usuario</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-17</td></tr>
+          <tr><td>total</td><td>DECIMAL(10,2)</td><td>-</td><td>3200.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">27. Compra</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_compra</td><td>INT</td><td>PK</td><td>8001</td></tr>
+          <tr><td>id_orden_compra</td><td>INT</td><td>FK</td><td>7001</td></tr>
+          <tr><td>id_proveedor</td><td>INT</td><td>FK</td><td>401</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-18</td></tr>
+          <tr><td>total</td><td>DECIMAL(10,2)</td><td>-</td><td>3200.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">28. Devolución de compra</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_devolucion_compra</td><td>INT</td><td>PK</td><td>120</td></tr>
+          <tr><td>id_compra</td><td>INT</td><td>FK</td><td>8001</td></tr>
+          <tr><td>motivo</td><td>VARCHAR(150)</td><td>-</td><td>Daño en transporte</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-19</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>150.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">29. Cuentas por cobrar</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_cuenta_cobrar</td><td>INT</td><td>PK</td><td>1001</td></tr>
+          <tr><td>id_cliente</td><td>INT</td><td>FK</td><td>301</td></tr>
+          <tr><td>id_factura</td><td>INT</td><td>FK</td><td>9001</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>4095.00</td></tr>
+          <tr><td>fecha_vencimiento</td><td>DATE</td><td>-</td><td>2026-10-10</td></tr>
+          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Pendiente</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">30. Nota de crédito cuentas por cobrar</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_nota_credito_cxc</td><td>INT</td><td>PK</td><td>10001</td></tr>
+          <tr><td>id_cuenta_cobrar</td><td>INT</td><td>FK</td><td>1001</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Descuento especial</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>200.00</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-27</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">31. Nota de débito cuentas por cobrar</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_nota_debito_cxc</td><td>INT</td><td>PK</td><td>10002</td></tr>
+          <tr><td>id_cuenta_cobrar</td><td>INT</td><td>FK</td><td>1001</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Intereses</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>50.00</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-30</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">32. Cuentas por pagar</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_cuenta_pagar</td><td>INT</td><td>PK</td><td>2001</td></tr>
+          <tr><td>id_proveedor</td><td>INT</td><td>FK</td><td>401</td></tr>
+          <tr><td>id_compra</td><td>INT</td><td>FK</td><td>8001</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>3200.00</td></tr>
+          <tr><td>fecha_vencimiento</td><td>DATE</td><td>-</td><td>2026-10-05</td></tr>
+          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Pendiente</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">33. Nota de crédito cuentas por pagar</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_nota_credito_cxp</td><td>INT</td><td>PK</td><td>20001</td></tr>
+          <tr><td>id_cuenta_pagar</td><td>INT</td><td>FK</td><td>2001</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Bonificación</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>180.00</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-28</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">34. Nota de débito cuentas por pagar</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_nota_debito_cxp</td><td>INT</td><td>PK</td><td>20002</td></tr>
+          <tr><td>id_cuenta_pagar</td><td>INT</td><td>FK</td><td>2001</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Flete adicional</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>90.00</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-29</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">35. Caja</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_caja</td><td>INT</td><td>PK</td><td>1</td></tr>
+          <tr><td>nro_caja</td><td>INT</td><td>-</td><td>1</td></tr>
+          <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Abierta</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">36. Apertura de caja</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_apertura_caja</td><td>INT</td><td>PK</td><td>11</td></tr>
+          <tr><td>id_caja</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>id_usuario</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>fecha_apertura</td><td>DATETIME</td><td>-</td><td>2026-09-28 08:00:00</td></tr>
+          <tr><td>monto_inicial</td><td>DECIMAL(10,2)</td><td>-</td><td>300.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">37. Cierre de caja</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_cierre_caja</td><td>INT</td><td>PK</td><td>22</td></tr>
+          <tr><td>id_apertura_caja</td><td>INT</td><td>FK</td><td>11</td></tr>
+          <tr><td>fecha_cierre</td><td>DATETIME</td><td>-</td><td>2026-09-28 18:00:00</td></tr>
+          <tr><td>monto_final</td><td>DECIMAL(10,2)</td><td>-</td><td>1250.00</td></tr>
+          <tr><td>diferencia</td><td>DECIMAL(10,2)</td><td>-</td><td>25.00</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">38. Recibo de ingreso</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_recibo_ingreso</td><td>INT</td><td>PK</td><td>33</td></tr>
+          <tr><td>id_apertura_caja</td><td>INT</td><td>FK</td><td>11</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Pago de alquiler</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>500.00</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-28</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">39. Banco</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_banco</td><td>INT</td><td>PK</td><td>1</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Banco Pichincha</td></tr>
+          <tr><td>codigo_banco</td><td>VARCHAR(20)</td><td>-</td><td>001</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">40. Cuenta bancaria</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>PK</td><td>101</td></tr>
+          <tr><td>id_banco</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>1</td></tr>
+          <tr><td>numero_cuenta</td><td>VARCHAR(30)</td><td>-</td><td>220000123456</td></tr>
+          <tr><td>tipo_cuenta</td><td>VARCHAR(30)</td><td>-</td><td>Corriente</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">41. Depósito</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_deposito</td><td>INT</td><td>PK</td><td>200</td></tr>
+          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-25</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>2500.00</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Venta del día</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">42. Cheque</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_cheque</td><td>INT</td><td>PK</td><td>300</td></tr>
+          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
+          <tr><td>numero_cheque</td><td>VARCHAR(30)</td><td>-</td><td>CH-2101</td></tr>
+          <tr><td>beneficiario</td><td>VARCHAR(150)</td><td>-</td><td>Proveedor X</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>800.00</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-26</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">43. Transferencia bancaria</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_transferencia_bancaria</td><td>INT</td><td>PK</td><td>400</td></tr>
+          <tr><td>id_cuenta_origen</td><td>INT</td><td>FK</td><td>101</td></tr>
+          <tr><td>id_cuenta_destino</td><td>INT</td><td>FK</td><td>102</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>1800.00</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-27</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Traslado de fondos</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">44. Nota de débito bancaria</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_nota_debito_bancaria</td><td>INT</td><td>PK</td><td>500</td></tr>
+          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>120.00</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Comisión bancaria</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-30</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">45. Nota de crédito bancaria</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_nota_credito_bancaria</td><td>INT</td><td>PK</td><td>501</td></tr>
+          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
+          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>250.00</td></tr>
+          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Intereses</td></tr>
+          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-30</td></tr>
+        </tbody>
+      </table>
+
+      <div class="subtitulo">46. Conciliación bancaria</div>
+      <table>
+        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
+        <tbody>
+          <tr><td>id_conciliacion_bancaria</td><td>INT</td><td>PK</td><td>600</td></tr>
+          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
+          <tr><td>periodo</td><td>VARCHAR(20)</td><td>-</td><td>2026-09</td></tr>
+          <tr><td>saldo_libro</td><td>DECIMAL(10,2)</td><td>-</td><td>12000.00</td></tr>
+          <tr><td>saldo_banco</td><td>DECIMAL(10,2)</td><td>-</td><td>11980.00</td></tr>
+          <tr><td>diferencia</td><td>DECIMAL(10,2)</td><td>-</td><td>20.00</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>8. Resumen final</h2>
+      <p>
+        En el sistema de electromuebles existen 46 entidades de dominio distribuidas en 8 categorías.
+        La estructura de base de datos está enfocada en:
+      </p>
+      <ul>
+        <li>Administración</li>
+        <li>Recursos humanos</li>
+        <li>Inventario</li>
+        <li>Ventas y facturación</li>
+        <li>Compras</li>
+        <li>Crédito y cobro</li>
+        <li>Caja</li>
+        <li>Banca y tesorería</li>
+      </ul>
+      <p>
+        En la práctica, las entidades más importantes para diferenciar fuerza y debilidad son:
+      </p>
+      <ul>
+        <li><strong>Cliente</strong> es fuerte respecto a <strong>Factura</strong>.</li>
+        <li><strong>Factura</strong> es débil respecto a <strong>Cliente</strong>.</li>
+        <li><strong>Proveedor</strong> es fuerte respecto a <strong>Compra</strong>.</li>
+        <li><strong>Compra</strong> es débil respecto a <strong>Proveedor</strong>.</li>
+        <li><strong>Empleado</strong> es fuerte respecto a <strong>Nómina</strong>.</li>
+        <li><strong>Nómina</strong> es débil respecto a <strong>Empleado</strong>.</li>
+      </ul>
+    </div>
+
+  </div>
+</body>
+</html>
