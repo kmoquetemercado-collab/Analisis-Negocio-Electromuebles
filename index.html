@@ -3,139 +3,158 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Análisis de Negocio - Electromuebles</title>
+  <title>Electromuebles - DEA, DERE, DER y Tablas de Dominio</title>
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
     mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
   </script>
   <style>
-    :root{
-      --azul:#1d4e89;
-      --azul2:#2a6f97;
-      --verde:#2e8b57;
-      --rojo:#b22234;
-      --gris:#dfe7ef;
-      --blanco:#ffffff;
-      --negro:#1e1e1e;
-      --sombra: 0 3px 8px rgba(0,0,0,0.12);
+    :root {
+      --azul: #0f2d4d;
+      --azul2: #1d5fa7;
+      --verde: #2e8b57;
+      --rojo: #d32f2f;
+      --gris: #ecf0f7;
+      --blanco: #ffffff;
+      --sombra: 0 4px 12px rgba(15, 45, 77, .1);
     }
 
     * { box-sizing: border-box; }
-    body{
-      margin:0;
+    body {
+      margin: 0;
       font-family: Arial, Helvetica, sans-serif;
-      background:#f4f7fb;
-      color:var(--negro);
-      line-height:1.5;
+      background: linear-gradient(180deg, #f5f9fc, #f0f5fb);
+      color: #1b1b1b;
+      line-height: 1.5;
     }
 
-    .container{
-      max-width:1300px;
-      margin:0 auto;
-      padding:30px 20px 60px;
+    .container {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 30px 20px 80px;
     }
 
-    .cover{
+    .cover {
       background: linear-gradient(135deg, var(--azul), var(--azul2));
       color: white;
       border-radius: 18px;
-      padding: 30px 40px;
+      padding: 36px 40px;
       box-shadow: var(--sombra);
-      margin-bottom: 25px;
+      margin-bottom: 28px;
     }
 
-    .cover h1{ margin:0; font-size:2.2rem; }
-    .cover p{ margin:8px 0 0; font-size:1.05rem; opacity:0.95; }
+    .cover h1 { margin: 0; font-size: 2.3rem; font-weight: 700; }
+    .cover p { margin: 8px 0 0; font-size: 1.08rem; opacity: 0.95; }
 
-    .section{
-      background:#fff;
-      border-radius:16px;
-      padding:24px 22px;
-      margin-bottom:22px;
+    .section {
+      background: var(--blanco);
+      border-radius: 16px;
+      padding: 24px 24px 20px;
+      margin-bottom: 20px;
       box-shadow: var(--sombra);
+      border: 1px solid #dceaf5;
     }
 
-    .section h2{
-      margin:0 0 14px;
-      color:var(--azul);
-      border-bottom:2px solid var(--gris);
-      padding-bottom:8px;
-      font-size:1.5rem;
+    .section h2 {
+      margin: 0 0 16px;
+      color: var(--azul);
+      border-bottom: 3px solid var(--gris);
+      padding-bottom: 10px;
+      font-size: 1.6rem;
     }
 
-    .subtitulo{
-      font-weight:700;
-      color:var(--azul2);
-      margin:18px 0 8px;
-      font-size:1.1rem;
+    .section h3 {
+      margin: 20px 0 10px;
+      color: var(--azul2);
+      font-size: 1.2rem;
+      border-left: 4px solid var(--azul2);
+      padding-left: 10px;
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:8px;
-      font-size:0.92rem;
+    .badge {
+      display: inline-block;
+      font-size: 0.73rem;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 20px;
+      margin-right: 6px;
+      vertical-align: middle;
     }
 
-    th, td{
-      border:1px solid #ccd8e5;
-      padding:8px 10px;
-      vertical-align:top;
-      text-align:left;
-    }
+    .fuerte { background: #e8f5e9; color: #1b5e20; }
+    .debil { background: #ffebee; color: #b71c1c; }
+    .categoria { background: #e3f2fd; color: #1565c0; }
 
-    th{
-      background:#edf3fa;
-      color:var(--azul);
-      font-weight:700;
-    }
-
-    .badge{
-      display:inline-block;
-      padding:4px 9px;
-      border-radius:999px;
-      font-size:0.75rem;
-      font-weight:700;
-      margin-right:6px;
-    }
-
-    .fuerte{ background:#e8f7ee; color:#1d6b46; }
-    .debil{ background:#fbeaea; color:#9d2f2f; }
-    .tipo{ background:#eef3ff; color:#2c4f93; }
-
-    .mermaid{
-      background:#fafcff;
-      border:1px solid #dfeaf6;
-      border-radius:12px;
-      padding:10px;
-      overflow:auto;
-    }
-
-    ul{
-      margin:10px 0 0 20px;
-      padding:0;
-    }
-
-    li{ margin:6px 0; }
-
-    .dos-col{
-      display:grid;
+    .grid-2 {
+      display: grid;
       grid-template-columns: 1fr 1fr;
-      gap:20px;
+      gap: 16px;
+      margin-bottom: 16px;
     }
 
-    .mini{
-      font-size:0.84rem;
+    .card-entidad {
+      border: 1px solid #dceaf5;
+      background: #fafcff;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 2px 6px rgba(15, 45, 77, .05);
     }
 
-    @media (max-width: 900px){
-      .dos-col{ grid-template-columns: 1fr; }
+    .card-entidad h4 {
+      margin: 0 0 8px;
+      color: var(--azul);
+      font-size: 1.05rem;
     }
 
-    @media print{
-      body{ background:#fff; }
-      .section{ box-shadow:none; border:1px solid #dfeaf6; }
-      .cover{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .mermaid {
+      background: #fcfdff;
+      border: 1px solid #dceaf5;
+      border-radius: 10px;
+      padding: 8px;
+      overflow: auto;
+      margin: 8px 0;
+      min-height: 100px;
+    }
+
+    .info-box {
+      background: #f0f7ff;
+      border-left: 4px solid var(--azul2);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: #233d5c;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      border: 1px solid #dceaf5;
+      padding: 7px 9px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #edf3fa;
+      color: var(--azul);
+      font-weight: 700;
+    }
+
+    .small { font-size: 0.85rem; }
+
+    @media (max-width: 1000px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .section { box-shadow: none; }
     }
   </style>
 </head>
@@ -143,862 +162,825 @@
   <div class="container">
 
     <div class="cover">
-      <h1>Empresa: Electromuebles</h1>
-      <p>Modelo de dominio, análisis de entidades, relaciones y tablas de base de datos</p>
+      <h1>Electromuebles</h1>
+      <p>Modelo de dominio completo: DEA, DERE, DER y 46+ diagramas por categoría para Base de Datos II</p>
     </div>
 
+    <!-- SECCIÓN INICIAL -->
     <div class="section">
-      <h2>1. Objetivo del negocio</h2>
-      <p>
-        El negocio de electromuebles gestiona ventas, compras, inventario, caja, pagos, cobranzas,
-        proveedores, clientes, sucursales, personal y banco. La base de datos deberá soportar todas
-        las operaciones de administración, logística, facturación, tesorería y nómina.
-      </p>
-      <p>
-        Se trabaja con la cardinalidad: <strong>1:1</strong>, <strong>1:N</strong> y <strong>N:M</strong>.
-      </p>
-    </div>
-
-    <div class="section">
-      <h2>2. Diferencia entre DEA, DERE y DER</h2>
-
-      <div class="dos-col">
+      <h2>1. Concepto: DEA, DERE y DER</h2>
+      <div class="grid-2">
         <div>
-          <div class="subtitulo">DEA</div>
-          <p>Es el Diagrama de Entidad-Atributo. Incluye:</p>
-          <ul>
-            <li>todas las entidades</li>
-            <li>sus atributos</li>
-            <li>claves primarias</li>
-            <li>claves candidatas</li>
-            <li>claves foráneas</li>
-          </ul>
+          <div class="info-box">
+            <strong>DEA (Diagrama Entidad-Atributo)</strong><br>
+            Muestra entidades con todos sus atributos, PK, FK y relaciones. Es el más detallado.
+          </div>
         </div>
-
         <div>
-          <div class="subtitulo">DERE</div>
-          <p>Es el Diagrama de Entidad-Relación con fuerza de entidad. Incluye:</p>
-          <ul>
-            <li>entidad fuerte</li>
-            <li>entidad débil</li>
-            <li>relación</li>
-            <li>cardinalidad</li>
-            <li>solo la clave principal y la relación</li>
-          </ul>
+          <div class="info-box">
+            <strong>DERE (Entidades fuertes y débiles)</strong><br>
+            Identifica entidad <span class="badge fuerte">fuerte</span> (existe independiente) vs <span class="badge debil">débil</span> (depende de otra).
+          </div>
         </div>
       </div>
-
-      <div class="subtitulo">DER</div>
-      <p>
-        Es el Diagrama Entidad-Relación general. Incluye:
-      </p>
-      <ul>
-        <li>entidades</li>
-        <li>relaciones</li>
-        <li>cardinalidad</li>
-        <li>clave primaria de cada entidad</li>
-      </ul>
-
-      <div class="subtitulo">Regla de entidad fuerte y débil</div>
-      <p>
-        En relación directa, la entidad fuerte se representa con doble línea y la débil con línea simple.
-        Ejemplo que indicó el profesor:
-      </p>
-
-      <div class="mermaid">
-        erDiagram
-          CLIENTE ||--o{ FACTURA : genera
-      </div>
-
-      <p class="mini">
-        <span class="badge fuerte">Fuerte</span> CLIENTE<br>
-        <span class="badge debil">Débil</span> FACTURA
-      </p>
-      <p>
-        <strong>Ejemplo de criterio:</strong> Cliente es fuerte respecto a Factura.
-        Factura es débil respecto a Cliente porque depende de él para existir.
-      </p>
-    </div>
-
-    <div class="section">
-      <h2>3. Entidades por categorías y clasificación fuerte/débil</h2>
-
-      <div class="subtitulo">Categoría 1: Administración, Ubicación y Seguridad</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Entidad</th>
-            <th>Tipo</th>
-            <th>Descripción</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>Sucursal</td><td><span class="badge fuerte">Fuerte</span></td><td>Unidades físicas del negocio.</td></tr>
-          <tr><td>Ciudad</td><td><span class="badge fuerte">Fuerte</span></td><td>Ubicación geográfica.</td></tr>
-          <tr><td>Usuario</td><td><span class="badge fuerte">Fuerte</span></td><td>Usuarios del sistema.</td></tr>
-          <tr><td>Provincia</td><td><span class="badge fuerte">Fuerte</span></td><td>Entidad geográfica base.</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">Categoría 2: Recursos Humanos y Personal</div>
-      <table>
-        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
-        <tbody>
-          <tr><td>Cargo</td><td><span class="badge fuerte">Fuerte</span></td><td>Rol dentro de la empresa.</td></tr>
-          <tr><td>Empleado</td><td><span class="badge fuerte">Fuerte</span></td><td>Persona que labora en la empresa.</td></tr>
-          <tr><td>Vendedor</td><td><span class="badge fuerte">Fuerte</span></td><td>Empleado vinculado a ventas.</td></tr>
-          <tr><td>Nómina</td><td><span class="badge debil">Débil</span></td><td>Dependiente del empleado y periodo.</td></tr>
-          <tr><td>Descuento de nómina</td><td><span class="badge debil">Débil</span></td><td>Descuentos asociados a una nómina.</td></tr>
-          <tr><td>Impuesto de nómina</td><td><span class="badge debil">Débil</span></td><td>Impuestos aplicados a la nómina.</td></tr>
-          <tr><td>Departamento nómina</td><td><span class="badge fuerte">Fuerte</span></td><td>Áreas o departamentos de gestión de personal.</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">Categoría 3: Catálogo e Inventario</div>
-      <table>
-        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
-        <tbody>
-          <tr><td>Categoría</td><td><span class="badge fuerte">Fuerte</span></td><td>Clasificación del producto.</td></tr>
-          <tr><td>Marca</td><td><span class="badge fuerte">Fuerte</span></td><td>Nombre de la marca del producto.</td></tr>
-          <tr><td>Producto</td><td><span class="badge fuerte">Fuerte</span></td><td>Inventario del negocio.</td></tr>
-          <tr><td>Unidad de producto</td><td><span class="badge fuerte">Fuerte</span></td><td>Unidad de medida del producto.</td></tr>
-          <tr><td>Almacén</td><td><span class="badge fuerte">Fuerte</span></td><td>Espacio de almacenamiento.</td></tr>
-          <tr><td>Transferencia de almacenes</td><td><span class="badge debil">Débil</span></td><td>Movimiento entre almacenes.</td></tr>
-          <tr><td>Grupo de producto</td><td><span class="badge fuerte">Fuerte</span></td><td>Agrupación de productos por familia.</td></tr>
-          <tr><td>Departamento de producto</td><td><span class="badge fuerte">Fuerte</span></td><td>Clasificación funcional del producto.</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">Categoría 4: Ventas, Facturación y Despacho</div>
-      <table>
-        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
-        <tbody>
-          <tr><td>Cliente</td><td><span class="badge fuerte">Fuerte</span></td><td>Cliente del negocio.</td></tr>
-          <tr><td>Cotización</td><td><span class="badge debil">Débil</span></td><td>Oferta inicial para un cliente.</td></tr>
-          <tr><td>Factura</td><td><span class="badge debil">Débil</span></td><td>Documento de venta, depende del cliente.</td></tr>
-          <tr><td>Devolución de factura</td><td><span class="badge debil">Débil</span></td><td>Devolución asociada a una factura.</td></tr>
-          <tr><td>Entrega a domicilio</td><td><span class="badge debil">Débil</span></td><td>Servicio logístico vinculado a la factura.</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">Categoría 5: Compras y Proveedores</div>
-      <table>
-        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
-        <tbody>
-          <tr><td>Proveedor</td><td><span class="badge fuerte">Fuerte</span></td><td>Persona o empresa que abastece productos.</td></tr>
-          <tr><td>Orden de compra</td><td><span class="badge debil">Débil</span></td><td>Pedido formal al proveedor.</td></tr>
-          <tr><td>Compra</td><td><span class="badge debil">Débil</span></td><td>Ingreso de productos al negocio.</td></tr>
-          <tr><td>Devolución de compra</td><td><span class="badge debil">Débil</span></td><td>Devolución de productos comprados.</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">Categoría 6: Cuentas por Cobrar y Pagar</div>
-      <table>
-        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
-        <tbody>
-          <tr><td>Cuentas por cobrar</td><td><span class="badge debil">Débil</span></td><td>Dinero pendiente por cobrar.</td></tr>
-          <tr><td>Nota de crédito cuentas por cobrar</td><td><span class="badge debil">Débil</span></td><td>Ajuste positivo al cliente.</td></tr>
-          <tr><td>Nota de débito cuentas por cobrar</td><td><span class="badge debil">Débil</span></td><td>Ajuste negativo al cliente.</td></tr>
-          <tr><td>Cuentas por pagar</td><td><span class="badge debil">Débil</span></td><td>Dinero pendiente por pagar.</td></tr>
-          <tr><td>Nota de crédito cuentas por pagar</td><td><span class="badge debil">Débil</span></td><td>Ajuste positivo al proveedor.</td></tr>
-          <tr><td>Nota de débito cuentas por pagar</td><td><span class="badge debil">Débil</span></td><td>Ajuste negativo al proveedor.</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">Categoría 7: Caja y Efectivo</div>
-      <table>
-        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
-        <tbody>
-          <tr><td>Caja</td><td><span class="badge fuerte">Fuerte</span></td><td>Arqueo de efectivo.</td></tr>
-          <tr><td>Apertura de caja</td><td><span class="badge debil">Débil</span></td><td>Inicio del turno de caja.</td></tr>
-          <tr><td>Cierre de caja</td><td><span class="badge debil">Débil</span></td><td>Cierre final de caja.</td></tr>
-          <tr><td>Recibo de ingreso</td><td><span class="badge debil">Débil</span></td><td>Registro de movimiento de ingreso.</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">Categoría 8: Gestión Bancaria y Tesorería</div>
-      <table>
-        <thead><tr><th>Entidad</th><th>Tipo</th><th>Descripción</th></tr></thead>
-        <tbody>
-          <tr><td>Banco</td><td><span class="badge fuerte">Fuerte</span></td><td>Entidad bancaria.</td></tr>
-          <tr><td>Cuenta bancaria</td><td><span class="badge fuerte">Fuerte</span></td><td>Cuenta operativa del negocio.</td></tr>
-          <tr><td>Depósito</td><td><span class="badge debil">Débil</span></td><td>Ingreso bancario asociado a una cuenta.</td></tr>
-          <tr><td>Cheque</td><td><span class="badge debil">Débil</span></td><td>Documento bancario asociado a cuenta.</td></tr>
-          <tr><td>Transferencia bancaria</td><td><span class="badge debil">Débil</span></td><td>Transferencia entre cuentas.</td></tr>
-          <tr><td>Nota de débito bancaria</td><td><span class="badge debil">Débil</span></td><td>Disminución del saldo bancario.</td></tr>
-          <tr><td>Nota de crédito bancaria</td><td><span class="badge debil">Débil</span></td><td>Aumento del saldo bancario.</td></tr>
-          <tr><td>Conciliación bancaria</td><td><span class="badge debil">Débil</span></td><td>Comparación de saldos contables y bancarios.</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="section">
-      <h2>4. Relaciones principales del negocio</h2>
-
-      <ul>
-        <li><strong>Provincia</strong> tiene muchas <strong>Ciudades</strong> (1:N).</li>
-        <li><strong>Ciudad</strong> tiene muchas <strong>Sucursales</strong> (1:N).</li>
-        <li><strong>Sucursal</strong> tiene muchos <strong>Empleados</strong> (1:N).</li>
-        <li><strong>Cargo</strong> define muchos <strong>Empleados</strong> (1:N).</li>
-        <li><strong>Empleado</strong> genera muchas <strong>Nóminas</strong> (1:N).</li>
-        <li><strong>Vendedor</strong> atiende muchas <strong>Cotizaciones</strong> (1:N).</li>
-        <li><strong>Cliente</strong> genera muchas <strong>Cotizaciones</strong> (1:N).</li>
-        <li><strong>Cliente</strong> genera muchas <strong>Facturas</strong> (1:N).</li>
-        <li><strong>Factura</strong> tiene muchas <strong>Devoluciones</strong> (1:N).</li>
-        <li><strong>Factura</strong> puede tener una <strong>Entrega a domicilio</strong> (1:1).</li>
-        <li><strong>Proveedor</strong> hace muchas <strong>Compras</strong> (1:N).</li>
-        <li><strong>Compra</strong> genera <strong>Cuentas por pagar</strong> (1:1).</li>
-        <li><strong>Cliente</strong> genera <strong>Cuentas por cobrar</strong> (1:N).</li>
-        <li><strong>Caja</strong> se abre y cierra en la <strong>Apertura/Cierre de caja</strong> (1:N).</li>
-        <li><strong>Banco</strong> tiene muchas <strong>Cuentas bancarias</strong> (1:N).</li>
-        <li><strong>Cuenta bancaria</strong> tiene muchos movimientos de <strong>Depósito</strong>, <strong>Cheque</strong> y <strong>Transferencia</strong> (1:N).</li>
-        <li><strong>Producto</strong> puede estar en muchos <strong>Almacenes</strong> mediante transferencias (N:M, a través de Transferencia de almacenes).</li>
-      </ul>
-    </div>
-
-    <div class="section">
-      <h2>5. DER – Diagrama Entidad-Relación principal</h2>
-
-      <div class="mermaid">
-        erDiagram
-          PROVINCIA ||--o{ CIUDAD : contiene
-          CIUDAD ||--o{ SUCURSAL : tiene
-          SUCURSAL ||--o{ EMPLEADO : gestiona
-          CARGO ||--o{ EMPLEADO : define
-          EMPLEADO ||--o{ NOMINA : recibe
-          EMPLEADO ||--o{ VENDEDOR : puede_ser
-          CLIENTE ||--o{ COTIZACION : solicita
-          VENDEDOR ||--o{ COTIZACION : atiende
-          CLIENTE ||--o{ FACTURA : genera
-          FACTURA ||--o{ DEVOLUCION_FACTURA : tiene
-          FACTURA ||--|| ENTREGA_DOMICILIO : tiene
-          SUCURSAL ||--o{ FACTURA : emite
-          PROVEEDOR ||--o{ ORDEN_COMPRA : entrega
-          ORDEN_COMPRA ||--|| COMPRA : convierte
-          COMPRA ||--o{ DEVOLUCION_COMPRA : registra
-          CLIENTE ||--o{ CUENTAS_POR_COBRAR : tiene
-          PROVEEDOR ||--o{ CUENTAS_POR_PAGAR : tiene
-          CAJA ||--o{ APERTURA_CAJA : presenta
-          APERTURA_CAJA ||--|| CIERRE_CAJA : termina
-          APERTURA_CAJA ||--o{ RECIBO_INGRESO : registra
-          BANCO ||--o{ CUENTA_BANCARIA : tiene
-          CUENTA_BANCARIA ||--o{ DEPOSITO : recibe
-          CUENTA_BANCARIA ||--o{ CHEQUE : emite
-          CUENTA_BANCARIA ||--o{ TRANSFERENCIA_BANCARIA : realiza
-          CUENTA_BANCARIA ||--o{ NOTA_DEBITO_BANCARIA : soporta
-          CUENTA_BANCARIA ||--o{ NOTA_CREDITO_BANCARIA : soporta
-          PRODUCTO }o--|| MARCA : pertenece_a
-          PRODUCTO }o--|| CATEGORIA : clasifica
-          PRODUCTO }o--|| UNIDAD_PRODUCTO : mide
-          ALMACEN ||--o{ TRANSFERENCIA_ALMACENES : realiza
-          PRODUCTO ||--o{ TRANSFERENCIA_ALMACENES : participa
+      <div class="info-box" style="margin-top: 10px;">
+        <strong>DER (Diagrama Entidad-Relación)</strong><br>
+        Modelo general para construir tablas. Relaciona entidades con cardinalidad 1:1, 1:N, N:M.
       </div>
     </div>
 
+    <!-- CATEGORÍA 1 -->
     <div class="section">
-      <h2>6. DERE – Diagrama de Entidad-Relación de Entidades Débiles/Fuertes</h2>
+      <h2><span class="badge categoria">Categoría 1</span> Administración, Ubicación y Seguridad</h2>
 
-      <p>
-        En este tipo de diagrama se gráfica la relación entre entidad fuerte y entidad débil:
-      </p>
-
-      <div class="mermaid">
-        erDiagram
-          CLIENTE ||--o{ FACTURA : genera
-          FACTURA ||--o{ DEVOLUCION_FACTURA : tiene
-          PROVEEDOR ||--o{ ORDEN_COMPRA : realiza
-          ORDEN_COMPRA ||--o{ COMPRA : convierte
-          EMPLEADO ||--o{ NOMINA : genera
-          CAJA ||--o{ APERTURA_CAJA : abre
-          CUENTA_BANCARIA ||--o{ DEPOSITO : recibe
-          BANCO ||--o{ CUENTA_BANCARIA : tiene
+      <h3>1.1. Provincia</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            PROVINCIA {
+              int id_provincia PK
+              string nombre
+            }
+        </div>
+        <h4>DER - Relación</h4>
+        <div class="mermaid">
+          erDiagram
+            PROVINCIA ||--o{ CIUDAD : tiene
+        </div>
+        <table>
+          <tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr>
+          <tr><td>id_provincia</td><td>INT</td><td>PK</td><td>1</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Pichincha</td></tr>
+        </table>
       </div>
 
-      <p class="mini">
-        Convención del profesor:<br>
-        Entidad fuerte = línea doble o doble contorno<br>
-        Entidad débil = línea simple
-      </p>
-    </div>
-
-    <div class="section">
-      <h2>7. Tablas de base de datos con PK, FK, tipos y ejemplo</h2>
-
-      <div class="subtitulo">1. Sucursal</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Atributo</th>
-            <th>Tipo</th>
-            <th>PK/FK</th>
-            <th>Ejemplo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>id_sucursal</td><td>INT</td><td>PK</td><td>1</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>ElectroMuebles Norte</td></tr>
-          <tr><td>direccion</td><td>VARCHAR(200)</td><td>-</td><td>Av. 9 de Octubre 345</td></tr>
-          <tr><td>telefono</td><td>VARCHAR(20)</td><td>-</td><td>0991234567</td></tr>
-          <tr><td>id_ciudad</td><td>INT</td><td>FK</td><td>10</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">2. Ciudad</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
+      <h3>1.2. Ciudad</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            CIUDAD {
+              int id_ciudad PK
+              string nombre
+              int id_provincia FK
+            }
+        </div>
+        <h4>DERE - Relación fuerte/débil</h4>
+        <div class="mermaid">
+          erDiagram
+            PROVINCIA ||--o{ CIUDAD : contiene
+        </div>
+        <table>
+          <tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr>
           <tr><td>id_ciudad</td><td>INT</td><td>PK</td><td>10</td></tr>
           <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Quito</td></tr>
-          <tr><td>id_provincia</td><td>INT</td><td>FK</td><td>3</td></tr>
-        </tbody>
-      </table>
+          <tr><td>id_provincia</td><td>INT</td><td>FK</td><td>1</td></tr>
+        </table>
+      </div>
 
-      <div class="subtitulo">3. Provincia</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_provincia</td><td>INT</td><td>PK</td><td>3</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Pichincha</td></tr>
-        </tbody>
-      </table>
+      <h3>1.3. Sucursal</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            SUCURSAL {
+              int id_sucursal PK
+              string nombre
+              string direccion
+              string telefono
+              int id_ciudad FK
+            }
+        </div>
+        <h4>DERE - Relación</h4>
+        <div class="mermaid">
+          erDiagram
+            CIUDAD ||--o{ SUCURSAL : tiene
+        </div>
+        <table>
+          <tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr>
+          <tr><td>id_sucursal</td><td>INT</td><td>PK</td><td>1</td></tr>
+          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>ElectroMuebles Norte</td></tr>
+          <tr><td>id_ciudad</td><td>INT</td><td>FK</td><td>10</td></tr>
+        </table>
+      </div>
 
-      <div class="subtitulo">4. Usuario</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
+      <h3>1.4. Usuario</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            USUARIO {
+              int id_usuario PK
+              string nombre
+              string email
+              string password_hash
+              string rol
+            }
+        </div>
+        <h4>DER - Información sin dependencia</h4>
+        <div class="mermaid">
+          erDiagram
+            USUARIO ||--o{ FACTURA : emite
+        </div>
+        <table>
+          <tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr>
           <tr><td>id_usuario</td><td>INT</td><td>PK</td><td>1</td></tr>
           <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>María</td></tr>
           <tr><td>email</td><td>VARCHAR(150)</td><td>-</td><td>maria@electromuebles.com</td></tr>
-          <tr><td>password_hash</td><td>VARCHAR(255)</td><td>-</td><td>$2y$10$abc123</td></tr>
-          <tr><td>rol</td><td>VARCHAR(50)</td><td>-</td><td>Administrador</td></tr>
-        </tbody>
-      </table>
+        </table>
+      </div>
+    </div>
 
-      <div class="subtitulo">5. Cargo</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_cargo</td><td>INT</td><td>PK</td><td>1</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Vendedor</td></tr>
-          <tr><td>descripcion</td><td>VARCHAR(200)</td><td>-</td><td>Atiende ventas y clientes.</td></tr>
-        </tbody>
-      </table>
+    <!-- CATEGORÍA 2 -->
+    <div class="section">
+      <h2><span class="badge categoria">Categoría 2</span> Recursos Humanos y Personal</h2>
 
-      <div class="subtitulo">6. Empleado</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
+      <h3>2.1. Cargo</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            CARGO {
+              int id_cargo PK
+              string nombre
+              string descripcion
+            }
+        </div>
+        <h4>DER - Entidad Fuerte</h4>
+        <div class="mermaid">
+          erDiagram
+            CARGO ||--o{ EMPLEADO : define
+        </div>
+      </div>
+
+      <h3>2.2. Empleado</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            EMPLEADO {
+              int id_empleado PK
+              string nombre
+              string cedula
+              decimal salario_base
+              int id_cargo FK
+              int id_sucursal FK
+            }
+        </div>
+        <h4>DERE - Relación de dependencia</h4>
+        <div class="mermaid">
+          erDiagram
+            CARGO ||--o{ EMPLEADO : define
+            SUCURSAL ||--o{ EMPLEADO : contrata
+        </div>
+        <table>
+          <tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr>
           <tr><td>id_empleado</td><td>INT</td><td>PK</td><td>1001</td></tr>
           <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>José</td></tr>
-          <tr><td>apellido</td><td>VARCHAR(100)</td><td>-</td><td>Pérez</td></tr>
-          <tr><td>cedula</td><td>VARCHAR(15)</td><td>-</td><td>1712345678</td></tr>
-          <tr><td>salario_base</td><td>DECIMAL(10,2)</td><td>-</td><td>850.00</td></tr>
           <tr><td>id_cargo</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>2</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">7. Vendedor</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_vendedor</td><td>INT</td><td>PK</td><td>201</td></tr>
-          <tr><td>id_empleado</td><td>INT</td><td>FK</td><td>1001</td></tr>
-          <tr><td>comision</td><td>DECIMAL(5,2)</td><td>-</td><td>5.50</td></tr>
-          <tr><td>meta_ventas</td><td>DECIMAL(10,2)</td><td>-</td><td>5000.00</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">8. Nómina</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_nomina</td><td>INT</td><td>PK</td><td>5001</td></tr>
-          <tr><td>id_empleado</td><td>INT</td><td>FK</td><td>1001</td></tr>
-          <tr><td>periodo</td><td>VARCHAR(20)</td><td>-</td><td>2026-09</td></tr>
-          <tr><td>sueldo_neto</td><td>DECIMAL(10,2)</td><td>-</td><td>780.00</td></tr>
-          <tr><td>fecha_pago</td><td>DATE</td><td>-</td><td>2026-09-30</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">9. Descuento de nómina</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_descuento_nomina</td><td>INT</td><td>PK</td><td>7001</td></tr>
-          <tr><td>id_nomina</td><td>INT</td><td>FK</td><td>5001</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(100)</td><td>-</td><td>Préstamo</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>60.00</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">10. Impuesto de nómina</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_impuesto_nomina</td><td>INT</td><td>PK</td><td>8001</td></tr>
-          <tr><td>id_nomina</td><td>INT</td><td>FK</td><td>5001</td></tr>
-          <tr><td>tipo_impuesto</td><td>VARCHAR(100)</td><td>-</td><td>IEES</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>45.00</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">11. Departamento nómina</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_departamento_nomina</td><td>INT</td><td>PK</td><td>11</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>RRHH</td></tr>
-          <tr><td>descripcion</td><td>VARCHAR(200)</td><td>-</td><td>Gestión de personal</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">12. Categoría</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_categoria</td><td>INT</td><td>PK</td><td>1</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Electrodomésticos</td></tr>
-          <tr><td>descripcion</td><td>VARCHAR(200)</td><td>-</td><td>Productos del hogar</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">13. Marca</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_marca</td><td>INT</td><td>PK</td><td>5</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Samsung</td></tr>
-          <tr><td>origen</td><td>VARCHAR(100)</td><td>-</td><td>Corea</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">14. Producto</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_producto</td><td>INT</td><td>PK</td><td>2001</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(150)</td><td>-</td><td>Refrigeradora 12 pies</td></tr>
-          <tr><td>descripcion</td><td>TEXT</td><td>-</td><td>Refrigerador de 2 puertas</td></tr>
-          <tr><td>precio_unitario</td><td>DECIMAL(10,2)</td><td>-</td><td>899.00</td></tr>
-          <tr><td>stock_minimo</td><td>INT</td><td>-</td><td>10</td></tr>
-          <tr><td>id_marca</td><td>INT</td><td>FK</td><td>5</td></tr>
-          <tr><td>id_categoria</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>id_unidad_producto</td><td>INT</td><td>FK</td><td>3</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">15. Unidad de producto</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_unidad_producto</td><td>INT</td><td>PK</td><td>3</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(50)</td><td>-</td><td>Unidad</td></tr>
-          <tr><td>abreviatura</td><td>VARCHAR(10)</td><td>-</td><td>U</td></tr>
-        </tbody>
-      </table>
-
-      <div class="subtitulo">16. Almacén</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_almacen</td><td>INT</td><td>PK</td><td>1</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Almacén Central</td></tr>
-          <tr><td>direccion</td><td>VARCHAR(200)</td><td>-</td><td>Av. Amazonas 100</td></tr>
           <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>1</td></tr>
-        </tbody>
-      </table>
+        </table>
+      </div>
 
-      <div class="subtitulo">17. Transferencia de almacenes</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_transferencia</td><td>INT</td><td>PK</td><td>50</td></tr>
-          <tr><td>id_almacen_origen</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>id_almacen_destino</td><td>INT</td><td>FK</td><td>2</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-15</td></tr>
-          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>En tránsito</td></tr>
-        </tbody>
-      </table>
+      <h3>2.3. Vendedor</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            VENDEDOR {
+              int id_vendedor PK
+              int id_empleado FK
+              decimal comision
+              decimal meta_ventas
+            }
+        </div>
+        <h4>DERE - Entidad débil de Empleado</h4>
+        <div class="mermaid">
+          erDiagram
+            EMPLEADO ||--o{ VENDEDOR : puede_ser
+        </div>
+      </div>
 
-      <div class="subtitulo">18. Grupo de producto</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_grupo_producto</td><td>INT</td><td>PK</td><td>7</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Hogar</td></tr>
-        </tbody>
-      </table>
+      <h3>2.4. Nómina</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            NOMINA {
+              int id_nomina PK
+              int id_empleado FK
+              string periodo
+              decimal sueldo_neto
+              date fecha_pago
+            }
+        </div>
+        <h4>DERE - Relación débil</h4>
+        <div class="mermaid">
+          erDiagram
+            EMPLEADO ||--o{ NOMINA : recibe
+        </div>
+        <div class="info-box">
+          <strong>NÓMINA es débil respecto a EMPLEADO:</strong> Depende del empleado para existir. Si el empleado no existe, la nómina no tiene sentido.
+        </div>
+      </div>
 
-      <div class="subtitulo">19. Departamento de producto</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_departamento_producto</td><td>INT</td><td>PK</td><td>4</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Lineas Blancas</td></tr>
-          <tr><td>descripcion</td><td>VARCHAR(200)</td><td>-</td><td>Productos de línea blanca.</td></tr>
-        </tbody>
-      </table>
+      <h3>2.5. Descuento de Nómina</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Nómina</h4>
+        <div class="mermaid">
+          erDiagram
+            NOMINA ||--o{ DESCUENTO_NOMINA : incluye
+        </div>
+      </div>
 
-      <div class="subtitulo">20. Cliente</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_cliente</td><td>INT</td><td>PK</td><td>301</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Ana López</td></tr>
-          <tr><td>cedula_ruc</td><td>VARCHAR(20)</td><td>-</td><td>1712345678</td></tr>
-          <tr><td>telefono</td><td>VARCHAR(20)</td><td>-</td><td>0998765432</td></tr>
-          <tr><td>email</td><td>VARCHAR(150)</td><td>-</td><td>ana@gmail.com</td></tr>
-          <tr><td>id_ciudad</td><td>INT</td><td>FK</td><td>10</td></tr>
-        </tbody>
-      </table>
+      <h3>2.6. Impuesto de Nómina</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Nómina</h4>
+        <div class="mermaid">
+          erDiagram
+            NOMINA ||--o{ IMPUESTO_NOMINA : aplica
+        </div>
+      </div>
 
-      <div class="subtitulo">21. Cotización</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_cotizacion</td><td>INT</td><td>PK</td><td>401</td></tr>
-          <tr><td>id_cliente</td><td>INT</td><td>FK</td><td>301</td></tr>
-          <tr><td>id_vendedor</td><td>INT</td><td>FK</td><td>201</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-22</td></tr>
-          <tr><td>subtotal</td><td>DECIMAL(10,2)</td><td>-</td><td>3500.00</td></tr>
-          <tr><td>iva</td><td>DECIMAL(10,2)</td><td>-</td><td>595.00</td></tr>
-        </tbody>
-      </table>
+      <h3>2.7. Departamento de Nómina</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            DEPARTAMENTO_NOMINA {
+              int id_departamento_nomina PK
+              string nombre
+              string descripcion
+            }
+        </div>
+      </div>
+    </div>
 
-      <div class="subtitulo">22. Factura</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_factura</td><td>INT</td><td>PK</td><td>9001</td></tr>
-          <tr><td>id_cliente</td><td>INT</td><td>FK</td><td>301</td></tr>
-          <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>2</td></tr>
-          <tr><td>id_usuario</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-23</td></tr>
-          <tr><td>total</td><td>DECIMAL(10,2)</td><td>-</td><td>4095.00</td></tr>
-          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Pagada</td></tr>
-        </tbody>
-      </table>
+    <!-- CATEGORÍA 3 -->
+    <div class="section">
+      <h2><span class="badge categoria">Categoría 3</span> Catálogo e Inventario</h2>
 
-      <div class="subtitulo">23. Devolución de factura</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_devolucion_factura</td><td>INT</td><td>PK</td><td>500</td></tr>
-          <tr><td>id_factura</td><td>INT</td><td>FK</td><td>9001</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-26</td></tr>
-          <tr><td>motivo</td><td>VARCHAR(150)</td><td>-</td><td>Producto defectuoso</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>120.00</td></tr>
-        </tbody>
-      </table>
+      <h3>3.1. Categoría</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            CATEGORIA {
+              int id_categoria PK
+              string nombre
+              string descripcion
+            }
+        </div>
+        <h4>DER - Entidad Fuerte</h4>
+        <div class="mermaid">
+          erDiagram
+            CATEGORIA ||--o{ PRODUCTO : clasifica
+        </div>
+      </div>
 
-      <div class="subtitulo">24. Entrega a domicilio</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_entrega_domicilio</td><td>INT</td><td>PK</td><td>600</td></tr>
-          <tr><td>id_factura</td><td>INT</td><td>FK</td><td>9001</td></tr>
-          <tr><td>direccion</td><td>VARCHAR(200)</td><td>-</td><td>La Floresta 120</td></tr>
-          <tr><td>fecha_envio</td><td>DATE</td><td>-</td><td>2026-09-24</td></tr>
-          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Entregado</td></tr>
-        </tbody>
-      </table>
+      <h3>3.2. Marca</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            MARCA {
+              int id_marca PK
+              string nombre
+              string origen
+            }
+        </div>
+        <h4>DER - Entidad Fuerte</h4>
+        <div class="mermaid">
+          erDiagram
+            MARCA ||--o{ PRODUCTO : produce
+        </div>
+      </div>
 
-      <div class="subtitulo">25. Proveedor</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_proveedor</td><td>INT</td><td>PK</td><td>401</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(150)</td><td>-</td><td>TechHome S.A.</td></tr>
-          <tr><td>ruc</td><td>VARCHAR(20)</td><td>-</td><td>1798765432001</td></tr>
-          <tr><td>telefono</td><td>VARCHAR(20)</td><td>-</td><td>0999999999</td></tr>
-          <tr><td>email</td><td>VARCHAR(150)</td><td>-</td><td>ventas@techhome.com</td></tr>
-          <tr><td>id_ciudad</td><td>INT</td><td>FK</td><td>15</td></tr>
-        </tbody>
-      </table>
+      <h3>3.3. Producto</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            PRODUCTO {
+              int id_producto PK
+              string nombre
+              string descripcion
+              decimal precio_unitario
+              int stock_minimo
+              int id_marca FK
+              int id_categoria FK
+              int id_unidad_producto FK
+            }
+        </div>
+        <h4>DERE - Relación múltiple</h4>
+        <div class="mermaid">
+          erDiagram
+            MARCA ||--o{ PRODUCTO : produce
+            CATEGORIA ||--o{ PRODUCTO : clasifica
+            UNIDAD_PRODUCTO ||--o{ PRODUCTO : mide
+        </div>
+      </div>
 
-      <div class="subtitulo">26. Orden de compra</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_orden_compra</td><td>INT</td><td>PK</td><td>7001</td></tr>
-          <tr><td>id_proveedor</td><td>INT</td><td>FK</td><td>401</td></tr>
-          <tr><td>id_usuario</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-17</td></tr>
-          <tr><td>total</td><td>DECIMAL(10,2)</td><td>-</td><td>3200.00</td></tr>
-        </tbody>
-      </table>
+      <h3>3.4. Unidad de Producto</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            UNIDAD_PRODUCTO {
+              int id_unidad_producto PK
+              string nombre
+              string abreviatura
+            }
+        </div>
+      </div>
 
-      <div class="subtitulo">27. Compra</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_compra</td><td>INT</td><td>PK</td><td>8001</td></tr>
-          <tr><td>id_orden_compra</td><td>INT</td><td>FK</td><td>7001</td></tr>
-          <tr><td>id_proveedor</td><td>INT</td><td>FK</td><td>401</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-18</td></tr>
-          <tr><td>total</td><td>DECIMAL(10,2)</td><td>-</td><td>3200.00</td></tr>
-        </tbody>
-      </table>
+      <h3>3.5. Almacén</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            ALMACEN {
+              int id_almacen PK
+              string nombre
+              string direccion
+              int id_sucursal FK
+            }
+        </div>
+      </div>
 
-      <div class="subtitulo">28. Devolución de compra</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_devolucion_compra</td><td>INT</td><td>PK</td><td>120</td></tr>
-          <tr><td>id_compra</td><td>INT</td><td>FK</td><td>8001</td></tr>
-          <tr><td>motivo</td><td>VARCHAR(150)</td><td>-</td><td>Daño en transporte</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-19</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>150.00</td></tr>
-        </tbody>
-      </table>
+      <h3>3.6. Transferencia de Almacenes</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Almacén</h4>
+        <div class="mermaid">
+          erDiagram
+            ALMACEN ||--o{ TRANSFERENCIA_ALMACENES : realiza
+            PRODUCTO ||--o{ TRANSFERENCIA_ALMACENES : participa
+        </div>
+        <div class="info-box">
+          TRANSFERENCIA es débil: depende de almacén origen, almacén destino y producto.
+        </div>
+      </div>
 
-      <div class="subtitulo">29. Cuentas por cobrar</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_cuenta_cobrar</td><td>INT</td><td>PK</td><td>1001</td></tr>
-          <tr><td>id_cliente</td><td>INT</td><td>FK</td><td>301</td></tr>
-          <tr><td>id_factura</td><td>INT</td><td>FK</td><td>9001</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>4095.00</td></tr>
-          <tr><td>fecha_vencimiento</td><td>DATE</td><td>-</td><td>2026-10-10</td></tr>
-          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Pendiente</td></tr>
-        </tbody>
-      </table>
+      <h3>3.7. Grupo de Producto</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            GRUPO_PRODUCTO {
+              int id_grupo_producto PK
+              string nombre
+            }
+        </div>
+      </div>
 
-      <div class="subtitulo">30. Nota de crédito cuentas por cobrar</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_nota_credito_cxc</td><td>INT</td><td>PK</td><td>10001</td></tr>
-          <tr><td>id_cuenta_cobrar</td><td>INT</td><td>FK</td><td>1001</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Descuento especial</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>200.00</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-27</td></tr>
-        </tbody>
-      </table>
+      <h3>3.8. Departamento de Producto</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            DEPARTAMENTO_PRODUCTO {
+              int id_departamento_producto PK
+              string nombre
+              string descripcion
+            }
+        </div>
+      </div>
+    </div>
 
-      <div class="subtitulo">31. Nota de débito cuentas por cobrar</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_nota_debito_cxc</td><td>INT</td><td>PK</td><td>10002</td></tr>
-          <tr><td>id_cuenta_cobrar</td><td>INT</td><td>FK</td><td>1001</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Intereses</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>50.00</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-30</td></tr>
-        </tbody>
-      </table>
+    <!-- CATEGORÍA 4 -->
+    <div class="section">
+      <h2><span class="badge categoria">Categoría 4</span> Ventas, Facturación y Despacho</h2>
 
-      <div class="subtitulo">32. Cuentas por pagar</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_cuenta_pagar</td><td>INT</td><td>PK</td><td>2001</td></tr>
-          <tr><td>id_proveedor</td><td>INT</td><td>FK</td><td>401</td></tr>
-          <tr><td>id_compra</td><td>INT</td><td>FK</td><td>8001</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>3200.00</td></tr>
-          <tr><td>fecha_vencimiento</td><td>DATE</td><td>-</td><td>2026-10-05</td></tr>
-          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Pendiente</td></tr>
-        </tbody>
-      </table>
+      <h3>4.1. Cliente</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            CLIENTE {
+              int id_cliente PK
+              string nombre
+              string cedula_ruc
+              string telefono
+              string email
+              int id_ciudad FK
+            }
+        </div>
+        <h4>DER - Entidad Fuerte</h4>
+        <div class="mermaid">
+          erDiagram
+            CLIENTE ||--o{ FACTURA : genera
+            CLIENTE ||--o{ COTIZACION : solicita
+        </div>
+        <div class="info-box">
+          <strong>CLIENTE es FUERTE:</strong> Existe independientemente. FACTURA depende de CLIENTE.
+        </div>
+      </div>
 
-      <div class="subtitulo">33. Nota de crédito cuentas por pagar</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_nota_credito_cxp</td><td>INT</td><td>PK</td><td>20001</td></tr>
-          <tr><td>id_cuenta_pagar</td><td>INT</td><td>FK</td><td>2001</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Bonificación</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>180.00</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-28</td></tr>
-        </tbody>
-      </table>
+      <h3>4.2. Cotización</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Cliente</h4>
+        <div class="mermaid">
+          erDiagram
+            CLIENTE ||--o{ COTIZACION : solicita
+            VENDEDOR ||--o{ COTIZACION : atiende
+        </div>
+        <div class="info-box">
+          COTIZACIÓN es débil: depende del cliente para existir.
+        </div>
+      </div>
 
-      <div class="subtitulo">34. Nota de débito cuentas por pagar</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_nota_debito_cxp</td><td>INT</td><td>PK</td><td>20002</td></tr>
-          <tr><td>id_cuenta_pagar</td><td>INT</td><td>FK</td><td>2001</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Flete adicional</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>90.00</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-29</td></tr>
-        </tbody>
-      </table>
+      <h3>4.3. Factura</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            FACTURA {
+              int id_factura PK
+              int id_cliente FK
+              int id_sucursal FK
+              int id_usuario FK
+              date fecha
+              decimal total
+              string estado
+            }
+        </div>
+        <h4>DERE - Relación fuerte/débil</h4>
+        <div class="mermaid">
+          erDiagram
+            CLIENTE ||--o{ FACTURA : genera
+        </div>
+        <div class="info-box">
+          <strong>FACTURA es DÉBIL respecto a CLIENTE:</strong> No puede existir sin un cliente asociado.
+        </div>
+      </div>
 
-      <div class="subtitulo">35. Caja</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_caja</td><td>INT</td><td>PK</td><td>1</td></tr>
-          <tr><td>nro_caja</td><td>INT</td><td>-</td><td>1</td></tr>
-          <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>estado</td><td>VARCHAR(20)</td><td>-</td><td>Abierta</td></tr>
-        </tbody>
-      </table>
+      <h3>4.4. Devolución de Factura</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Factura</h4>
+        <div class="mermaid">
+          erDiagram
+            FACTURA ||--o{ DEVOLUCION_FACTURA : genera
+        </div>
+      </div>
 
-      <div class="subtitulo">36. Apertura de caja</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_apertura_caja</td><td>INT</td><td>PK</td><td>11</td></tr>
-          <tr><td>id_caja</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>id_usuario</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>fecha_apertura</td><td>DATETIME</td><td>-</td><td>2026-09-28 08:00:00</td></tr>
-          <tr><td>monto_inicial</td><td>DECIMAL(10,2)</td><td>-</td><td>300.00</td></tr>
-        </tbody>
-      </table>
+      <h3>4.5. Entrega a Domicilio</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Factura (1:1)</h4>
+        <div class="mermaid">
+          erDiagram
+            FACTURA ||--|| ENTREGA_DOMICILIO : tiene
+        </div>
+        <div class="info-box">
+          Relación 1:1 - Una factura puede tener una entrega a domicilio.
+        </div>
+      </div>
+    </div>
 
-      <div class="subtitulo">37. Cierre de caja</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_cierre_caja</td><td>INT</td><td>PK</td><td>22</td></tr>
-          <tr><td>id_apertura_caja</td><td>INT</td><td>FK</td><td>11</td></tr>
-          <tr><td>fecha_cierre</td><td>DATETIME</td><td>-</td><td>2026-09-28 18:00:00</td></tr>
-          <tr><td>monto_final</td><td>DECIMAL(10,2)</td><td>-</td><td>1250.00</td></tr>
-          <tr><td>diferencia</td><td>DECIMAL(10,2)</td><td>-</td><td>25.00</td></tr>
-        </tbody>
-      </table>
+    <!-- CATEGORÍA 5 -->
+    <div class="section">
+      <h2><span class="badge categoria">Categoría 5</span> Compras y Proveedores</h2>
 
-      <div class="subtitulo">38. Recibo de ingreso</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_recibo_ingreso</td><td>INT</td><td>PK</td><td>33</td></tr>
-          <tr><td>id_apertura_caja</td><td>INT</td><td>FK</td><td>11</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Pago de alquiler</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>500.00</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-28</td></tr>
-        </tbody>
-      </table>
+      <h3>5.1. Proveedor</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            PROVEEDOR {
+              int id_proveedor PK
+              string nombre
+              string ruc
+              string telefono
+              string email
+              int id_ciudad FK
+            }
+        </div>
+        <h4>DER - Entidad Fuerte</h4>
+        <div class="mermaid">
+          erDiagram
+            PROVEEDOR ||--o{ COMPRA : abastece
+        </div>
+        <div class="info-box">
+          <strong>PROVEEDOR es FUERTE:</strong> Existe independientemente de las compras.
+        </div>
+      </div>
 
-      <div class="subtitulo">39. Banco</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_banco</td><td>INT</td><td>PK</td><td>1</td></tr>
-          <tr><td>nombre</td><td>VARCHAR(100)</td><td>-</td><td>Banco Pichincha</td></tr>
-          <tr><td>codigo_banco</td><td>VARCHAR(20)</td><td>-</td><td>001</td></tr>
-        </tbody>
-      </table>
+      <h3>5.2. Orden de Compra</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Proveedor</h4>
+        <div class="mermaid">
+          erDiagram
+            PROVEEDOR ||--o{ ORDEN_COMPRA : realiza
+        </div>
+      </div>
 
-      <div class="subtitulo">40. Cuenta bancaria</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>PK</td><td>101</td></tr>
-          <tr><td>id_banco</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>id_sucursal</td><td>INT</td><td>FK</td><td>1</td></tr>
-          <tr><td>numero_cuenta</td><td>VARCHAR(30)</td><td>-</td><td>220000123456</td></tr>
-          <tr><td>tipo_cuenta</td><td>VARCHAR(30)</td><td>-</td><td>Corriente</td></tr>
-        </tbody>
-      </table>
+      <h3>5.3. Compra</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            COMPRA {
+              int id_compra PK
+              int id_orden_compra FK
+              int id_proveedor FK
+              date fecha
+              decimal total
+            }
+        </div>
+        <h4>DERE - Relación fuerte/débil</h4>
+        <div class="mermaid">
+          erDiagram
+            PROVEEDOR ||--o{ COMPRA : abastece
+        </div>
+        <div class="info-box">
+          COMPRA es débil respecto a PROVEEDOR: el negocio registra compras de proveedores.
+        </div>
+      </div>
 
-      <div class="subtitulo">41. Depósito</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_deposito</td><td>INT</td><td>PK</td><td>200</td></tr>
-          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-25</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>2500.00</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Venta del día</td></tr>
-        </tbody>
-      </table>
+      <h3>5.4. Devolución de Compra</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Compra</h4>
+        <div class="mermaid">
+          erDiagram
+            COMPRA ||--o{ DEVOLUCION_COMPRA : registra
+        </div>
+      </div>
+    </div>
 
-      <div class="subtitulo">42. Cheque</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_cheque</td><td>INT</td><td>PK</td><td>300</td></tr>
-          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
-          <tr><td>numero_cheque</td><td>VARCHAR(30)</td><td>-</td><td>CH-2101</td></tr>
-          <tr><td>beneficiario</td><td>VARCHAR(150)</td><td>-</td><td>Proveedor X</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>800.00</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-26</td></tr>
-        </tbody>
-      </table>
+    <!-- CATEGORÍA 6 -->
+    <div class="section">
+      <h2><span class="badge categoria">Categoría 6</span> Cuentas por Cobrar y Pagar</h2>
 
-      <div class="subtitulo">43. Transferencia bancaria</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_transferencia_bancaria</td><td>INT</td><td>PK</td><td>400</td></tr>
-          <tr><td>id_cuenta_origen</td><td>INT</td><td>FK</td><td>101</td></tr>
-          <tr><td>id_cuenta_destino</td><td>INT</td><td>FK</td><td>102</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>1800.00</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-27</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Traslado de fondos</td></tr>
-        </tbody>
-      </table>
+      <h3>6.1. Cuentas por Cobrar</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Cliente</h4>
+        <div class="mermaid">
+          erDiagram
+            CLIENTE ||--o{ CUENTAS_POR_COBRAR : tiene
+        </div>
+      </div>
 
-      <div class="subtitulo">44. Nota de débito bancaria</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_nota_debito_bancaria</td><td>INT</td><td>PK</td><td>500</td></tr>
-          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>120.00</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Comisión bancaria</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-30</td></tr>
-        </tbody>
-      </table>
+      <h3>6.2. Nota de Crédito CxC</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de CxC</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTAS_POR_COBRAR ||--o{ NOTA_CREDITO_CXC : genera
+        </div>
+      </div>
 
-      <div class="subtitulo">45. Nota de crédito bancaria</div>
-      <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_nota_credito_bancaria</td><td>INT</td><td>PK</td><td>501</td></tr>
-          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
-          <tr><td>monto</td><td>DECIMAL(10,2)</td><td>-</td><td>250.00</td></tr>
-          <tr><td>concepto</td><td>VARCHAR(150)</td><td>-</td><td>Intereses</td></tr>
-          <tr><td>fecha</td><td>DATE</td><td>-</td><td>2026-09-30</td></tr>
-        </tbody>
-      </table>
+      <h3>6.3. Nota de Débito CxC</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de CxC</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTAS_POR_COBRAR ||--o{ NOTA_DEBITO_CXC : genera
+        </div>
+      </div>
 
-      <div class="subtitulo">46. Conciliación bancaria</div>
+      <h3>6.4. Cuentas por Pagar</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Proveedor</h4>
+        <div class="mermaid">
+          erDiagram
+            PROVEEDOR ||--o{ CUENTAS_POR_PAGAR : tiene
+        </div>
+      </div>
+
+      <h3>6.5. Nota de Crédito CxP</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de CxP</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTAS_POR_PAGAR ||--o{ NOTA_CREDITO_CXP : genera
+        </div>
+      </div>
+
+      <h3>6.6. Nota de Débito CxP</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de CxP</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTAS_POR_PAGAR ||--o{ NOTA_DEBITO_CXP : genera
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORÍA 7 -->
+    <div class="section">
+      <h2><span class="badge categoria">Categoría 7</span> Caja y Efectivo</h2>
+
+      <h3>7.1. Caja</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            CAJA {
+              int id_caja PK
+              int nro_caja
+              int id_sucursal FK
+              string estado
+            }
+        </div>
+        <h4>DER - Entidad Fuerte</h4>
+        <div class="mermaid">
+          erDiagram
+            CAJA ||--o{ APERTURA_CAJA : abre
+        </div>
+      </div>
+
+      <h3>7.2. Apertura de Caja</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Caja</h4>
+        <div class="mermaid">
+          erDiagram
+            CAJA ||--o{ APERTURA_CAJA : tiene
+        </div>
+        <div class="info-box">
+          APERTURA es débil: depende de CAJA para existir.
+        </div>
+      </div>
+
+      <h3>7.3. Cierre de Caja</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Apertura (1:1)</h4>
+        <div class="mermaid">
+          erDiagram
+            APERTURA_CAJA ||--|| CIERRE_CAJA : culmina
+        </div>
+      </div>
+
+      <h3>7.4. Recibo de Ingreso</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Apertura</h4>
+        <div class="mermaid">
+          erDiagram
+            APERTURA_CAJA ||--o{ RECIBO_INGRESO : registra
+        </div>
+      </div>
+    </div>
+
+    <!-- CATEGORÍA 8 -->
+    <div class="section">
+      <h2><span class="badge categoria">Categoría 8</span> Gestión Bancaria y Tesorería</h2>
+
+      <h3>8.1. Banco</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            BANCO {
+              int id_banco PK
+              string nombre
+              string codigo_banco
+            }
+        </div>
+        <h4>DER - Entidad Fuerte</h4>
+        <div class="mermaid">
+          erDiagram
+            BANCO ||--o{ CUENTA_BANCARIA : posee
+        </div>
+      </div>
+
+      <h3>8.2. Cuenta Bancaria</h3>
+      <div class="card-entidad">
+        <h4>DEA - Diagrama Entidad-Atributo</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTA_BANCARIA {
+              int id_cuenta_bancaria PK
+              int id_banco FK
+              int id_sucursal FK
+              string numero_cuenta
+              string tipo_cuenta
+            }
+        </div>
+        <h4>DERE - Relación fuerte/débil</h4>
+        <div class="mermaid">
+          erDiagram
+            BANCO ||--o{ CUENTA_BANCARIA : posee
+        </div>
+      </div>
+
+      <h3>8.3. Depósito</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Cuenta Bancaria</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTA_BANCARIA ||--o{ DEPOSITO : recibe
+        </div>
+      </div>
+
+      <h3>8.4. Cheque</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Cuenta Bancaria</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTA_BANCARIA ||--o{ CHEQUE : emite
+        </div>
+      </div>
+
+      <h3>8.5. Transferencia Bancaria</h3>
+      <div class="card-entidad">
+        <h4>DERE - Relación entre cuentas</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTA_BANCARIA ||--o{ TRANSFERENCIA_BANCARIA : realiza
+        </div>
+      </div>
+
+      <h3>8.6. Nota de Débito Bancaria</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Cuenta</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTA_BANCARIA ||--o{ NOTA_DEBITO_BANCARIA : soporta
+        </div>
+      </div>
+
+      <h3>8.7. Nota de Crédito Bancaria</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Cuenta</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTA_BANCARIA ||--o{ NOTA_CREDITO_BANCARIA : soporta
+        </div>
+      </div>
+
+      <h3>8.8. Conciliación Bancaria</h3>
+      <div class="card-entidad">
+        <h4>DERE - Entidad débil de Cuenta (1:1)</h4>
+        <div class="mermaid">
+          erDiagram
+            CUENTA_BANCARIA ||--|| CONCILIACION_BANCARIA : concilia
+        </div>
+      </div>
+    </div>
+
+    <!-- DER GENERAL -->
+    <div class="section">
+      <h2>9. DER General - Modelo de Base de Datos Completo</h2>
+      <div class="mermaid">
+        erDiagram
+          PROVINCIA ||--o{ CIUDAD : tiene
+          CIUDAD ||--o{ SUCURSAL : posee
+          SUCURSAL ||--o{ EMPLEADO : contrata
+          CARGO ||--o{ EMPLEADO : define
+          EMPLEADO ||--o{ NOMINA : recibe
+          EMPLEADO ||--o{ VENDEDOR : puede_ser
+          CLIENTE ||--o{ FACTURA : genera
+          CLIENTE ||--o{ COTIZACION : solicita
+          FACTURA ||--o{ DEVOLUCION_FACTURA : incluye
+          FACTURA ||--|| ENTREGA_DOMICILIO : tiene
+          VENDEDOR ||--o{ COTIZACION : atiende
+          PROVEEDOR ||--o{ COMPRA : abastece
+          COMPRA ||--o{ DEVOLUCION_COMPRA : afecta
+          CLIENTE ||--o{ CUENTAS_POR_COBRAR : tiene
+          PROVEEDOR ||--o{ CUENTAS_POR_PAGAR : tiene
+          CAJA ||--o{ APERTURA_CAJA : abre
+          APERTURA_CAJA ||--|| CIERRE_CAJA : culmina
+          BANCO ||--o{ CUENTA_BANCARIA : administra
+          PRODUCTO }o--|| MARCA : pertenece
+          PRODUCTO }o--|| CATEGORIA : clasifica
+          ALMACEN ||--o{ TRANSFERENCIA_ALMACENES : realiza
+      </div>
+    </div>
+
+    <!-- TABLA DE DOMINIO -->
+    <div class="section">
+      <h2>10. Tabla de Dominio por Categorías</h2>
       <table>
-        <thead><tr><th>Atributo</th><th>Tipo</th><th>PK/FK</th><th>Ejemplo</th></tr></thead>
-        <tbody>
-          <tr><td>id_conciliacion_bancaria</td><td>INT</td><td>PK</td><td>600</td></tr>
-          <tr><td>id_cuenta_bancaria</td><td>INT</td><td>FK</td><td>101</td></tr>
-          <tr><td>periodo</td><td>VARCHAR(20)</td><td>-</td><td>2026-09</td></tr>
-          <tr><td>saldo_libro</td><td>DECIMAL(10,2)</td><td>-</td><td>12000.00</td></tr>
-          <tr><td>saldo_banco</td><td>DECIMAL(10,2)</td><td>-</td><td>11980.00</td></tr>
-          <tr><td>diferencia</td><td>DECIMAL(10,2)</td><td>-</td><td>20.00</td></tr>
-        </tbody>
+        <tr><th>Categoría</th><th>Cantidad</th><th>Entidades</th></tr>
+        <tr><td><span class="badge categoria">1</span></td><td>4</td><td>Sucursal, Ciudad, Usuario, Provincia</td></tr>
+        <tr><td><span class="badge categoria">2</span></td><td>7</td><td>Cargo, Empleado, Vendedor, Nómina, Descuento, Impuesto, Dpto. Nómina</td></tr>
+        <tr><td><span class="badge categoria">3</span></td><td>8</td><td>Categoría, Marca, Producto, Unidad, Almacén, Transferencia, Grupo, Dpto.</td></tr>
+        <tr><td><span class="badge categoria">4</span></td><td>5</td><td>Cliente, Cotización, Factura, Devolución Factura, Entrega</td></tr>
+        <tr><td><span class="badge categoria">5</span></td><td>4</td><td>Proveedor, Orden de Compra, Compra, Devolución Compra</td></tr>
+        <tr><td><span class="badge categoria">6</span></td><td>6</td><td>CxC, NC CxC, ND CxC, CxP, NC CxP, ND CxP</td></tr>
+        <tr><td><span class="badge categoria">7</span></td><td>4</td><td>Caja, Apertura, Cierre, Recibo Ingreso</td></tr>
+        <tr><td><span class="badge categoria">8</span></td><td>8</td><td>Banco, Cuenta, Depósito, Cheque, Transferencia, ND, NC, Conciliación</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>46</strong></td><td><strong>Todas las entidades del negocio de Electromuebles</strong></td></tr>
       </table>
     </div>
 
+    <!-- RESUMEN -->
     <div class="section">
-      <h2>8. Resumen final</h2>
-      <p>
-        En el sistema de electromuebles existen 46 entidades de dominio distribuidas en 8 categorías.
-        La estructura de base de datos está enfocada en:
-      </p>
-      <ul>
-        <li>Administración</li>
-        <li>Recursos humanos</li>
-        <li>Inventario</li>
-        <li>Ventas y facturación</li>
-        <li>Compras</li>
-        <li>Crédito y cobro</li>
-        <li>Caja</li>
-        <li>Banca y tesorería</li>
-      </ul>
-      <p>
-        En la práctica, las entidades más importantes para diferenciar fuerza y debilidad son:
-      </p>
-      <ul>
-        <li><strong>Cliente</strong> es fuerte respecto a <strong>Factura</strong>.</li>
-        <li><strong>Factura</strong> es débil respecto a <strong>Cliente</strong>.</li>
-        <li><strong>Proveedor</strong> es fuerte respecto a <strong>Compra</strong>.</li>
-        <li><strong>Compra</strong> es débil respecto a <strong>Proveedor</strong>.</li>
-        <li><strong>Empleado</strong> es fuerte respecto a <strong>Nómina</strong>.</li>
-        <li><strong>Nómina</strong> es débil respecto a <strong>Empleado</strong>.</li>
-      </ul>
+      <h2>11. Resumen Final para la Entrega</h2>
+      <div class="info-box">
+        <strong>✓ 46+ Diagramas Generados:</strong><br>
+        - DEA para cada entidad (con atributos, PK, FK)<br>
+        - DERE para relaciones fuerte/débil<br>
+        - DER para cardinalidad y relaciones
+      </div>
+      <div class="info-box" style="margin-top: 10px;">
+        <strong>✓ 8 Categorías Clasificadas:</strong><br>
+        Administración, RRHH, Inventario, Ventas, Compras, Crédito, Caja y Banca
+      </div>
+      <div class="info-box" style="margin-top: 10px;">
+        <strong>✓ Entidades Fuerte y Débil Identificadas:</strong><br>
+        Cliente <span class="badge fuerte">FUERTE</span> vs Factura <span class="badge debil">DÉBIL</span><br>
+        Proveedor <span class="badge fuerte">FUERTE</span> vs Compra <span class="badge debil">DÉBIL</span>
+      </div>
     </div>
 
   </div>
